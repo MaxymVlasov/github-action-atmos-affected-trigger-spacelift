@@ -131,12 +131,22 @@ runs:
         printf "body=%s" "$body" >>$GITHUB_OUTPUT
 
     - name: Create PR Comment with Affected Stacks
-      uses: marocchino/sticky-pull-request-comment@f61b6cf21ef2fcc468f4345cdfcc9bda741d2343 # v2.6.2
+      uses: MaxymVlasov/sticky-pull-request-comment@859b055c1533159ea8fbf37766667499852a6a58
       if: ${{ steps.affected-stacks.outputs.has-affected-stacks == 'true' && inputs.trigger-method == 'comment' }}
       with:
         header: atmos-affected-stacks
         recreate: true
         path: comment-body.txt
+      env:
+        GITHUB_TOKEN: ${{inputs.github-token}}
+
+    - name: Hide comment
+      uses: MaxymVlasov/sticky-pull-request-comment@859b055c1533159ea8fbf37766667499852a6a58
+      if: ${{ steps.affected-stacks.outputs.has-affected-stacks == 'true' && inputs.trigger-method == 'comment' }}
+      with:
+        header: atmos-affected-stacks
+        hide: true
+        hide_classify: "RESOLVED"
       env:
         GITHUB_TOKEN: ${{inputs.github-token}}
 
